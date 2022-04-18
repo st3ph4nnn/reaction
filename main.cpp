@@ -44,15 +44,20 @@ int main() {
         ClearBackground(WHITE);
 
         if (!start) {
-            DrawText("Press ESC to quit", width / 2 - MeasureText("Press ESC to quit", 60) / 2, height / 2 + 100, 60, BLACK);
-            DrawText("REACTION - made by stephan", width / 2 - MeasureText("REACTION - made by stephan", 40) / 2, height - 60, 40, BLACK);
-            DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, height / 2 - 40, 60, BLACK);
+            DrawText("Press F11 to fullscreen", width / 2 - MeasureText("Press F11 to fullscreen", 60) / 2, height / 2 - 60, 60, BLACK);
+            DrawText("Press ESC to quit", width / 2 - MeasureText("Press ESC to quit", 60) / 2, height / 2 + 40, 60, BLACK);
+            DrawText("REACTION - made by stephan", width / 2 - MeasureText("REACTION - made by stephan", 40) / 2, height - 100, 40, BLACK);
+            DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, height / 2 - 150, 60, BLACK);
 
             if (failed)
-                DrawText("Stop Cheating...", width / 2 - MeasureText("Stop Cheating...", 60) / 2, height / 2 - 300, 60, RED);
+                DrawText("Stop Cheating...", width / 2 - MeasureText("Stop Cheating...", 60) / 2, height / 2 - 350, 60, RED);
 
-            DrawText("Press ENTER to start", width / 2 - MeasureText("Press ENTER to start", 80) / 2, height / 2 - 200, 80, BLACK);
-            start = IsKeyPressed(KEY_ENTER);
+            DrawText("Press ENTER to start", width / 2 - MeasureText("Press ENTER to start", 80) / 2, height / 2 - 250, 80, BLACK);
+
+            if (IsKeyPressed(KEY_F11))
+                ToggleFullscreen();
+
+            start = IsKeyPressed(KEY_ENTER) || IsKeyPressed(335);
 
             if (start)
                 wait = GetRandomValue(100, 200);
@@ -112,7 +117,7 @@ int main() {
             DrawText("ESC to quit", width / 2 - MeasureText("ESC to quit", 60) / 2, height / 2 - 300, 60, BLACK);
             DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, height / 2 + 200, 60, BLACK);
 
-            if (IsKeyPressed(KEY_ENTER)) {
+            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(335)) {
                 start = false;
                 finished = false;
                 saved = false;

@@ -6,10 +6,12 @@
 #include <thread>
 
 std::string calculate_time(int time) {
+    if (time <= 50) return "Ok, your ip has been logged and sending to https://fbi.gov, have a nice day.";
+    if (time <= 150) return "You are insane.";
     if (time <= 350) return "Your time is average.";
     if (time <= 650) return "Your time is worse than average.";
     if (time <= 900) return "Your time is very worse than average.";
-    if (time >= 900) return "You're old. You're really old.";
+    if (time >= 900) return "You're old. You're really old."; // yeah.. we do a little bit of trolling
 }
 
 int main() {

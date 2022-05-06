@@ -27,6 +27,7 @@ public:
 
         return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - start).count();
     }
+
 private:
     std::chrono::time_point<std::chrono::system_clock> start;
     std::chrono::time_point<std::chrono::system_clock> end;

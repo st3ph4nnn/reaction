@@ -31,6 +31,7 @@ std::string calculate_time(int time) {
 }
 
 int main() {
+    SetTraceLogLevel(LOG_NONE);
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_ALWAYS_RUN);
     InitWindow(0, 0, "reaction");
     ToggleFullscreen();
@@ -55,20 +56,26 @@ int main() {
     fin >> best;
     fin.close();
 
+    RenderTexture2D texture = LoadRenderTexture(1366, 768);
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
+        DrawTexturePro(texture.texture, (Rectangle){0, 0, (float)texture.texture.width, (float)-texture.texture.height}, (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()}, (Vector2){0, 0}, 0.0f, WHITE);
+        EndDrawing();
 
+        BeginTextureMode(texture);
+        ClearBackground(WHITE);
         if (!start) {
-            DrawText("Press F11 to fullscreen", width / 2 - MeasureText("Press F11 to fullscreen", 60) / 2, height / 2 - 60, 60, BLACK);
-            DrawText("Press ESC to quit", width / 2 - MeasureText("Press ESC to quit", 60) / 2, height / 2 + 40, 60, BLACK);
-            DrawText("REACTION - made by stephan", width / 2 - MeasureText("REACTION - made by stephan", 40) / 2, height - 100, 40, BLACK);
-            DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, height / 2 - 150, 60, BLACK);
+            DrawText("Press F11 to fullscreen", texture.texture.width / 2 - MeasureText("Press F11 to fullscreen", 60) / 2, texture.texture.height / 2 - 60, 60, BLACK);
+            DrawText("Press ESC to quit", texture.texture.width / 2 - MeasureText("Press ESC to quit", 60) / 2, texture.texture.height / 2 + 40, 60, BLACK);
+            DrawText("REACTION - made by stephan", texture.texture.width / 2 - MeasureText("REACTION - made by stephan", 40) / 2, texture.texture.height - 100, 40, BLACK);
+            DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), texture.texture.width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, texture.texture.height / 2 - 150, 60, BLACK);
 
             if (failed)
-                DrawText("Stop Cheating...", width / 2 - MeasureText("Stop Cheating...", 60) / 2, height / 2 - 350, 60, RED);
+                DrawText("Stop Cheating...", texture.texture.width / 2 - MeasureText("Stop Cheating...", 60) / 2, texture.texture.height / 2 - 350, 60, RED);
 
-            DrawText("Press ENTER to start", width / 2 - MeasureText("Press ENTER to start", 80) / 2, height / 2 - 250, 80, BLACK);
+            DrawText("Press ENTER to start", texture.texture.width / 2 - MeasureText("Press ENTER to start", 80) / 2, texture.texture.height / 2 - 250, 80, BLACK);
 
             if (IsKeyPressed(KEY_F11))
                 ToggleFullscreen();
@@ -78,15 +85,15 @@ int main() {
             if (start)
                 wait = GetRandomValue(100, 200);
 
-            EndDrawing();
+            EndTextureMode();
             continue;
         }
 
         failed = false;
 
         if (start && wait) {
-            DrawRectangle(0, 0, width, height, RED);
-            DrawText("Press any key when you see green...", width / 2 - MeasureText("Press any key when you see green...", 60) / 2, height / 2 - 30, 60, WHITE);
+            DrawRectangle(0, 0, texture.texture.width, texture.texture.height, RED);
+            DrawText("Press any key when you see green...", texture.texture.width / 2 - MeasureText("Press any key when you see green...", 60) / 2, texture.texture.height / 2 - 30, 60, WHITE);
 
             int pressed = GetKeyPressed();
 
@@ -95,18 +102,18 @@ int main() {
                 finished = false;
                 failed = true;
                 saved = false;
-                EndDrawing();
+                EndTextureMode();
                 continue;
             }
 
             wait--;
             if (wait == 0)
                 time.start_count();
-            EndDrawing();
+            EndTextureMode();
             continue;
         }
 
-        DrawRectangle(0, 0, width, height, GREEN);
+        DrawRectangle(0, 0, texture.texture.width, texture.texture.height, GREEN);
 
         if (!finished) {
             int pressed = GetKeyPressed();
@@ -127,20 +134,22 @@ int main() {
                 saved = true;
             }
 
-            DrawText((std::to_string(time.elapsedMilliseconds()) + "ms").c_str(), width / 2 - MeasureText((std::to_string(time.elapsedMilliseconds()) + "ms").c_str(), 130) / 2, height / 2 - 75, 130, BLACK);
-            DrawText(calculate_time(time.elapsedMilliseconds()).c_str(), width / 2 - MeasureText(calculate_time(time.elapsedMilliseconds()).c_str(), 50) / 2, height / 2 + 100, 50, BLACK);
-            DrawText("ENTER to restart", width / 2 - MeasureText("ENTER to restart", 60) / 2, height / 2 - 200, 60, BLACK);
-            DrawText("ESC to quit", width / 2 - MeasureText("ESC to quit", 60) / 2, height / 2 - 300, 60, BLACK);
-            DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, height / 2 + 200, 60, BLACK);
+            DrawText((std::to_string(time.elapsedMilliseconds()) + "ms").c_str(), texture.texture.width / 2 - MeasureText((std::to_string(time.elapsedMilliseconds()) + "ms").c_str(), 130) / 2, texture.texture.height / 2 - 75, 130, BLACK);
+            DrawText(calculate_time(time.elapsedMilliseconds()).c_str(), texture.texture.width / 2 - MeasureText(calculate_time(time.elapsedMilliseconds()).c_str(), 50) / 2, texture.texture.height / 2 + 100, 50, BLACK);
+            DrawText("ENTER to restart", texture.texture.width / 2 - MeasureText("ENTER to restart", 60) / 2, texture.texture.height / 2 - 200, 60, BLACK);
+            DrawText("ESC to quit", texture.texture.width / 2 - MeasureText("ESC to quit", 60) / 2, texture.texture.height / 2 - 300, 60, BLACK);
+            DrawText(("Best time: " + std::to_string(best) + "ms").c_str(), texture.texture.width / 2 - MeasureText(("Best time: " + std::to_string(best) + "ms").c_str(), 60) / 2, texture.texture.height / 2 + 200, 60, BLACK);
 
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(335)) {
                 start = false;
                 finished = false;
                 saved = false;
+                EndTextureMode();
+                continue;
             }
         }
 
-        EndDrawing();
+        EndTextureMode();
     }
 
     CloseWindow();
